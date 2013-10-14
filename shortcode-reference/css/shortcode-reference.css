@@ -1,0 +1,62 @@
+.shortcode_reference_list {
+	height: 150px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	margin-bottom: 20px;
+}
+
+.shortcode_reference_item {
+	padding: 0px 5px;
+	line-height: 25px;
+	border-bottom: 1px solid #cccccc;
+	background : transparent;
+	clear : both;
+}
+
+.shortcode_reference_list .shortcode_reference_item {
+	cursor: pointer;
+}
+.shortcode_reference_list .shortcode_reference_item.highlight {
+	background: #E4F2FD;
+	margin: 0;
+}
+.shortcode_reference_list .shortcode_reference_item.selected {
+	background: #EEEEEE;
+	font-weight :bold;
+}
+
+.shortcode_reference_container {
+	margin-bottm: 10px;
+	height: 200px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.shortcode_reference_container .shortcode_key {
+	height: 25px;
+	padding-left: 5px;
+	line-height: 25px;
+	float: left;
+	margin-right: 10px;
+	clear : both;
+	width: 55px;
+	*width: 60px;
+	
+}
+
+.shortcode_reference_container .shortcode_value {
+	padding-right: 5px;
+	line-height: 25px;
+	float: left;
+	font-weight: bold;
+	width: 165px;
+	*width: 170px;
+}
+
+.shortcode_reference_container .shortcode_reference_description {
+	border: 1px solid #EEEEEE;
+	padding: 10px 5px;
+	line-height: 16px;
+	clear : both;
+	margin-right: 0px;
+}
