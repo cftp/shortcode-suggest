@@ -4,7 +4,7 @@
  *
  */
 /*global tinymce, autocomplete, ajaxurl */
-(function ($) {
+(function($) {
 	"use strict";
 
 	var DOWN_ARROW_KEY = 40;
@@ -15,14 +15,14 @@
 
 	tinymce.create('tinymce.plugins.autocomplete', {
 
-		init: function ( ed, url ) {
+		init: function(ed, url) {
 
 			// All the plugin parameters
 			var params = {
-				list: $( '<ul class="shortcode-suggest"></ul>' ).appendTo( '.wp-editor-container' ),
+				list: $('<ul class="shortcode-suggest"></ul>').appendTo('.wp-editor-container'),
 				visible: false,
 				cancelEnter: false,
-				delimiter: ['160','32'],
+				delimiter: ['160', '32'],
 				options: {},
 				trigger: '[',
 				minLength: '0',
@@ -38,18 +38,17 @@
 			 *
 			 * @return {void}
 			 */
-			function keyUpEvent( ed, e ) {
-				if (
-						! params.visible &&
-								$.inArray( e.keyCode, [ ENTER_KEY, ESC_KEY ] ) === -1 ||
-								$.inArray( e.keyCode, [ DOWN_ARROW_KEY, UP_ARROW_KEY, ENTER_KEY, ESC_KEY ] ) === -1
-						) {
-					var currentWord = getCurrentWord( ed );
-					var matches = matchingOptions( currentWord );
-					if ( currentWord.length > 0 ) {
-						populateList( currentWord );
+			function keyUpEvent(ed, e) {
+				if (!params.visible &&
+					$.inArray(e.keyCode, [ENTER_KEY, ESC_KEY]) === -1 ||
+					$.inArray(e.keyCode, [DOWN_ARROW_KEY, UP_ARROW_KEY, ENTER_KEY, ESC_KEY]) === -1
+				) {
+					var currentWord = getCurrentWord(ed);
+					var matches = matchingOptions(currentWord);
+					if (currentWord.length > 0) {
+						populateList(currentWord);
 					}
-					if ( currentWord.length === 0 || matches.length === 0 ) {
+					if (currentWord.length === 0 || matches.length === 0) {
 						hideOptionList();
 					}
 				}
@@ -63,24 +62,24 @@
 			 *
 			 * @return {mixed|boolean}
 			 */
-			function keyDownEvent( ed, e ) {
-				if ( params.visible ) {
-					switch( e.keyCode ) {
-					case DOWN_ARROW_KEY:
-						highlightNextOption();
-						return tinymce.dom.Event.cancel(e);
-					case UP_ARROW_KEY:
-						highlightPreviousOption();
-						return tinymce.dom.Event.cancel(e);
-					case ENTER_KEY:
-						selectOption( ed, getCurrentWord(ed) );
-						params.cancelEnter = true;
-						// the enter event needs to be cancelled on keypress so
-						// it doesn't register a carriage return
-						return false;
-					case ESC_KEY:
-						hideOptionList();
-						return tinymce.dom.Event.cancel(e);
+			function keyDownEvent(ed, e) {
+				if (params.visible) {
+					switch (e.keyCode) {
+						case DOWN_ARROW_KEY:
+							highlightNextOption();
+							return tinymce.dom.Event.cancel(e);
+						case UP_ARROW_KEY:
+							highlightPreviousOption();
+							return tinymce.dom.Event.cancel(e);
+						case ENTER_KEY:
+							selectOption(ed, getCurrentWord(ed));
+							params.cancelEnter = true;
+							// the enter event needs to be cancelled on keypress so
+							// it doesn't register a carriage return
+							return false;
+						case ESC_KEY:
+							hideOptionList();
+							return tinymce.dom.Event.cancel(e);
 					}
 
 				}
@@ -94,11 +93,11 @@
 			 *
 			 * @return {void|object} - tinycemce cancel event
 			 */
-			function keyPressEvent( ed, e ) {
-				if ( e.keyCode === ENTER_KEY && params.cancelEnter ) {
+			function keyPressEvent(ed, e) {
+				if (e.keyCode === ENTER_KEY && params.cancelEnter) {
 					params.cancelEnter = false;
 					params.ajax_list = [];
-					return tinymce.dom.Event.cancel( e );
+					return tinymce.dom.Event.cancel(e);
 				}
 			}
 
@@ -109,29 +108,29 @@
 			 *
 			 * @return {String}
 			 */
-			function getCurrentWord( ed ) {
+			function getCurrentWord(ed) {
 				var nodeText = ed.selection.getSel().focusNode === null ? "" : ed.selection.getSel().focusNode.nodeValue;
 				var positionInNode = ed.selection.getSel().focusOffset;
 
-				if ( nodeText === null || nodeText.length === 0 || ed.selection.getNode().className === params.nodeClass ) {
+				if (nodeText === null || nodeText.length === 0 || ed.selection.getNode().className === params.nodeClass) {
 					return "";
 				}
 
 				var lastDelimiter = 0;
-				for ( var i = 0; i < positionInNode; i++ ) {
-					if ( params.delimiter.indexOf( nodeText.charCodeAt(i).toString() ) !== -1 ) {
+				for (var i = 0; i < positionInNode; i++) {
+					if (params.delimiter.indexOf(nodeText.charCodeAt(i).toString()) !== -1) {
 						lastDelimiter = i + 1;
 					}
 				}
 
-				var word = nodeText.substr( lastDelimiter, positionInNode - lastDelimiter );
+				var word = nodeText.substr(lastDelimiter, positionInNode - lastDelimiter);
 				var retWord = "";
-				if ( word.length >= params.minLength > 0 && word.charAt(0).toString() === params.trigger ) {
+				if (word.length >= params.minLength > 0 && word.charAt(0).toString() === params.trigger) {
 					retWord = word.substring(1);
 				}
 
 				//Replace underscore by space so user can type full name
-				retWord = retWord.replace( '_', ' ' );
+				retWord = retWord.replace('_', ' ');
 
 				return retWord;
 			}
@@ -143,12 +142,12 @@
 			 *
 			 * @return {Array}
 			 */
-			function matchingOptions( currentWord ) {
+			function matchingOptions(currentWord) {
 				var options = params.options;
 				var matches = [];
-				for ( var key in options ) {
-					if ( currentWord.length > 0 && wordMatches( currentWord, key ) ) {
-						matches.push( key );
+				for (var key in options) {
+					if (currentWord.length > 0 && wordMatches(currentWord, key)) {
+						matches.push(key);
 					}
 				}
 				return matches;
@@ -162,9 +161,9 @@
 			 *
 			 * @return {Array|{index: number, input: string}}
 			 */
-			function wordMatches( word, key ) {
-				var test = new RegExp( word, 'gi' );
-				return key.match( test );
+			function wordMatches(word, key) {
+				var test = new RegExp(word, 'gi');
+				return key.match(test);
 			}
 
 			/**
@@ -176,11 +175,32 @@
 			 *
 			 * @return {void}
 			 */
-			function populateList( currentWord ) {
-				params.ajax_list.push( currentWord );
+			function populateList(currentWord) {
+				params.ajax_list.push(currentWord);
+
+				// if query term search before in this session then do not make extra ajax call get result from local storage
+				if (typeof(Storage) !== "undefined") {
+					if (sessionStorage[currentWord]) {
+						var stored_data = JSON.parse( sessionStorage[currentWord] );
+
+						// Merge both object together
+						$.extend(params.options, stored_data);
+
+						//Get the matches
+						var matches = matchingOptions(currentWord);
+
+						if (matches.length > 0) {
+							displayOptionList(matches, currentWord, ed);
+							highlightNextOption();
+						}
+
+						// stop ajax call
+						AJAX_ON = true;
+					}
+				}
 
 				// Sometimes ajax is not fast enough
-				if ( ! AJAX_ON ) {
+				if (!AJAX_ON) {
 					AJAX_ON = true;
 
 					params.ajaxRequest = $.ajax({
@@ -189,32 +209,37 @@
 						data: {
 							action: autocomplete.action,
 							autocomplete_nonce: autocomplete.nonce,
-							shortcode_suggest : currentWord
+							shortcode_suggest: currentWord
 						},
 						dataType: 'json',
-						success: function ( response ) {
-							if ( true === response.success && params.ajax_list !== 0 ) {
+						success: function(response) {
+							if (true === response.success && params.ajax_list !== 0) {
 								var data = response.data;
 
+								//store result in local storage ( per session ) which saving ajax call for same query term
+								if (typeof(Storage) !== "undefined")
+									sessionStorage[currentWord] = JSON.stringify(data);
+
+
 								// Merge both object together
-								$.extend( params.options, data );
+								$.extend(params.options, data);
 
 								// Get the matches
-								var matches = matchingOptions( currentWord );
-								if ( matches.length > 0 ) {
-									displayOptionList( matches, currentWord, ed );
+								var matches = matchingOptions(currentWord);
+								if (matches.length > 0) {
+									displayOptionList(matches, currentWord, ed);
 									highlightNextOption();
 								}
 							}
 
 							AJAX_ON = false;
 
-							if ( params.ajax_list.length > 0 ) {
-								populateList( params.ajax_list.pop() );
+							if (params.ajax_list.length > 0) {
+								populateList(params.ajax_list.pop());
 								params.ajax_list = [];
 							}
 						},
-						error: function (jqXHR, textStatus) {
+						error: function(jqXHR, textStatus) {
 							// error
 						}
 					});
@@ -233,41 +258,40 @@
 			 *
 			 * @return {Void}
 			 */
-			function displayOptionList( matches, matchedText, ed ) {
+			function displayOptionList(matches, matchedText, ed) {
 				var matchesList = "";
-				var highlightRegex = new RegExp( "(" + matchedText + ")" );
+				var highlightRegex = new RegExp("(" + matchedText + ")");
 
 				for (var key in matches) {
-					if ( matches.hasOwnProperty(key) ) {
-						var docs = params.options[ matches[key].toString() ].description;
-						matchesList += 
-							'<li data-value="' + matches[key] + 
-							'">[' + matches[key].replace( highlightRegex, "<mark>$1</mark>" ) 
-							+ '] <div class="docs">' + docs + '</div></li>';
+					if (matches.hasOwnProperty(key)) {
+						var docs = params.options[matches[key].toString()].description;
+						matchesList +=
+							'<li data-value="' + matches[key] +
+							'">[' + matches[key].replace(highlightRegex, "<mark>$1</mark>") + '] <div class="docs">' + docs + '</div></li>';
 					}
 				}
-				params.list.html( matchesList );
+				params.list.html(matchesList);
 
 				// Work out the position of the caret
-				var tinymcePosition = $( ed.getContainer() ).position();
-				var toolbarPosition = $( ed.getContainer() ).find( ".mceToolbar" ).first();
+				var tinymcePosition = $(ed.getContainer()).position();
+				var toolbarPosition = $(ed.getContainer()).find(".mceToolbar").first();
 				var nodePosition = $(ed.selection.getNode()).position();
 				var textareaTop = 0;
 				var textareaLeft = 0;
-				if ( ed.selection.getRng().getClientRects().length > 0 ) {
+				if (ed.selection.getRng().getClientRects().length > 0) {
 					textareaTop = ed.selection.getRng().getClientRects()[0].top + ed.selection.getRng().getClientRects()[0].height;
 					textareaLeft = ed.selection.getRng().getClientRects()[0].left;
 				} else {
-					textareaTop = parseInt( $( ed.selection.getNode() ).css( "font-size" ), 10 ) * 1.3 + nodePosition.top;
+					textareaTop = parseInt($(ed.selection.getNode()).css("font-size"), 10) * 1.3 + nodePosition.top;
 					textareaLeft = nodePosition.left;
 				}
 
-				params.list.css( "margin-top", tinymcePosition.top + toolbarPosition.innerHeight() + textareaTop );
-				params.list.css( "margin-left", tinymcePosition.left + textareaLeft );
-				params.list.css( "display", "block" );
+				params.list.css("margin-top", tinymcePosition.top + toolbarPosition.innerHeight() + textareaTop);
+				params.list.css("margin-left", tinymcePosition.left + textareaLeft);
+				params.list.css("display", "block");
 				params.visible = true;
 
-				optionListEventHandlers( ed );
+				optionListEventHandlers(ed);
 			}
 
 			/**
@@ -286,13 +310,13 @@
 			 * @return {void}
 			 */
 			function highlightNextOption() {
-				var current = params.list.find( "[data-selected=true]" );
-				if ( current.size() === 0 || current.next().size() === 0 ) {
+				var current = params.list.find("[data-selected=true]");
+				if (current.size() === 0 || current.next().size() === 0) {
 					params.list.find("li:first-child").attr("data-selected", "true");
 				} else {
-					current.next().attr( "data-selected", "true" );
+					current.next().attr("data-selected", "true");
 				}
-				current.attr( "data-selected", "false" );
+				current.attr("data-selected", "false");
 			}
 
 			/**
@@ -301,7 +325,7 @@
 			 * @return {void}
 			 */
 			function highlightPreviousOption() {
-				var current = params.list.find( "[data-selected=true]" );
+				var current = params.list.find("[data-selected=true]");
 				if (current.size() === 0 || current.prev().size() === 0) {
 					params.list.find("li:last-child").attr("data-selected", "true");
 				} else {
@@ -317,13 +341,13 @@
 			 *
 			 * @return {void}
 			 */
-			function optionListEventHandlers( ed ) {
-				params.list.find( "li" ).hover(function () {
-					params.list.find( "[data-selected=true]" ).attr( "data-selected", "false" );
-					$(this).attr( "data-selected", "true" );
+			function optionListEventHandlers(ed) {
+				params.list.find("li").hover(function() {
+					params.list.find("[data-selected=true]").attr("data-selected", "false");
+					$(this).attr("data-selected", "true");
 				});
-				params.list.find( "li" ).click(function () {
-					selectOption( ed, getCurrentWord(ed) );
+				params.list.find("li").click(function() {
+					selectOption(ed, getCurrentWord(ed));
 				});
 			}
 
@@ -335,20 +359,20 @@
 			 *
 			 * @returns {void}
 			 */
-			function selectOption( ed, matchedText ) {
-				var $selection = $(params.list).find( "[data-selected=true]" );
-				if ( $selection === null ) {
-					$selection = $(params.list).find( "li:first-child" );
+			function selectOption(ed, matchedText) {
+				var $selection = $(params.list).find("[data-selected=true]");
+				if ($selection === null) {
+					$selection = $(params.list).find("li:first-child");
 				}
 
-				var currentValue = $selection.attr( "data-value" );
-				var currentID = $selection.attr( "data-id" );
-				var currentURL = $selection.attr( "data-url" );
+				var currentValue = $selection.attr("data-value");
+				var currentID = $selection.attr("data-id");
+				var currentURL = $selection.attr("data-url");
 
 				// Modify the range to replace overwrite the option text that has already been entered
 				var range = ed.selection.getRng();
-				range.setStart( range.startContainer, range.startOffset - matchedText.length - 1 );
-				ed.selection.setRng( range );
+				range.setStart(range.startContainer, range.startOffset - matchedText.length - 1);
+				ed.selection.setRng(range);
 				ed.selection.setContent('[' + currentValue + ']');
 
 				/*				params.nodeClass +
@@ -365,13 +389,13 @@
 			}
 
 			// Add event listener here
-			ed.onKeyUp.addToTop( keyUpEvent );
-			ed.onKeyDown.addToTop( keyDownEvent );
-			ed.onKeyPress.addToTop( keyPressEvent );
-			ed.onClick.add( hideOptionList );
+			ed.onKeyUp.addToTop(keyUpEvent);
+			ed.onKeyDown.addToTop(keyDownEvent);
+			ed.onKeyPress.addToTop(keyPressEvent);
+			ed.onClick.add(hideOptionList);
 		}
 
 	});
 
-	tinymce.PluginManager.add( 'autocomplete', tinymce.plugins.autocomplete );
+	tinymce.PluginManager.add('autocomplete', tinymce.plugins.autocomplete);
 })(jQuery);
