@@ -105,7 +105,7 @@ class ShortcodeReference {
 			}
 			$this->_description = $parsed_desc;
 		}
-		return $this->_description;
+		return apply_filters( 'shortcode_suggest_description' ,$this->_description, $this->_shortcode);
 	}
 	
 	/**
