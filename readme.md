@@ -6,3 +6,5 @@ Things to do:
 * Enable on the HTML editor too?
 * Improve the design of the suggestions
 * Parse the inline docs to discover and hint the shortcode attributes - would be nice if shortcodes made this clearer and there was a a standard approach
+
+![Shortcode Suggest](/assets/images/shortcode-suggest.png)
